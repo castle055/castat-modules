@@ -1,0 +1,45 @@
+#!/bin/sh
+period=1
+
+WIDTH=35
+
+#exit 0
+CARROUSEL_STATUS_FILE="/tmp/mpd-carrousel"
+carrousel_status=0
+#full_title=$( mpc -f %title% | head -n1 )
+full_title=$( timeout 0.3 mpc | head -n1 )
+[[ -f $CARROUSEL_STATUS_FILE ]] && carrousel_status=$(( $( cat $CARROUSEL_STATUS_FILE ) + 1 ))
+[[ $carrousel_status -gt $((${#full_title} - $WIDTH)) ]] && carrousel_status=1
+echo $carrousel_status > $CARROUSEL_STATUS_FILE
+
+mpcs=$( timeout 0.3 mpc )
+
+title=$( echo $full_title | tr ' ' '-' | tr [a-z] [A-Z] | cut -c $carrousel_status-$(( $carrousel_status + $WIDTH )) )
+sttus=$( echo "$mpcs" | tail -n2 | head -n1 | cut -d '[' -f2 | cut -d ']' -f1 )
+flags=$( echo $mpcs | cut -d ':' -f5,6,7,8,9 | sed 's/[a-z]*://g' )
+# sttus -> [playing/paused/stopped]
+# flags -> volume repeat random single consume
+
+PLAY_SYMBOL="\uf04d"
+case "$sttus" in
+	"paused")
+		PLAY_SYMBOL="^r0,4,6,16^^r10,4,6,16^^c$( xgetres dwm.normbgcolor )^^r1,5,4,14^^r11,5,4,14^^f19^^d^";;
+#		PLAY_SYMBOL="\uf04b" ;;
+	"playing")
+		PRGS="$(echo "$mpcs" | grep 'playing' | sed 's/\[playing\].*(//;s/%)//' )"
+		PRGS_WIDTH="$(( 9 * $WIDTH * $PRGS / 109 ))"
+		PLAY_SYMBOL="^r0,1,$PRGS_WIDTH,1^^r0,22,$PRGS_WIDTH,1^^l-1,5,6,12^^l-1,18,6,11^^l1,2,11,12^^l1,21,11,11^^f19^" ;;
+#		PLAY_SYMBOL="\uf04c" ;;
+	*)	title='';;
+esac > /dev/null
+
+REPEAT='\uf2d1'
+[[ "$( echo $flags | cut -d ' ' -f2 )" == "on" ]] && REPEAT="\uf01e"
+
+SHUFFLE='\uf2d1'
+[[ "$( echo $flags | cut -d ' ' -f3 )" == "on" ]] && SHUFFLE="\uf074"
+
+[[ $title == '' ]] && { echo "^f-13^" && exit 0 ; }
+#[[ $title == '' ]] && title="═════════« MUSIC »═════════"
+
+echo -e ' '$PLAY_SYMBOL $title $REPEAT $SHUFFLE' ^d^'

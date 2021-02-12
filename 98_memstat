@@ -1,0 +1,33 @@
+#!/bin/sh
+period=1
+
+SVNSEG='/home/victor/.local/lib/dwmstatus/seven-seg'
+
+#==== MEM DISPLAY ====
+tmpdir="/tmp/memstat.dwmstatus"
+[ -d $tmpdir ] || mkdir $tmpdir
+export graph_hist="$tmpdir/mem_hist"
+
+export hist_length=20
+export graph_height=15
+export top=2
+
+MEM=$( free | grep Mem: | awk '{print int(100*($3+$5)/$2);}' )
+
+export new_percent=$MEM
+
+[[ $MEM -lt 10 ]] && MEM=" $MEM"
+
+[[ $MEM -gt 90 ]] && FORMAT='^b#ff0000^^c#06060a^'
+#echo -e $(~/.config/dwmstatus/graph_lib)$FORMAT'\uf2db'$MEM%' '^d^
+
+#==== TEMP DISPLAY ====
+temp=$( sensors coretemp-isa-0000 | grep id | cut -d ' ' -f 5 | cut -c 2-3 )
+#temp=95
+percent=$(( 100 * ($temp-30) / 80 ))
+deg=$(( $percent * 80 / 100 ))
+[ $temp -gt 90 ] && meterFORMAT="^c#ffff22^^r-1,22,26,2^" && dispFORMAT="^c#ffff22^"
+
+meter="^c#88ddff^$dispFORMAT$($SVNSEG $temp 4 22 10)^f-3^$meterFORMAT^a0,0,47,40,$((180 - $deg)),$deg^^a1,1,45,38,$((180 - $deg)),$deg^^a3,3,41,34,$((180 - $deg)),$deg^^d^"
+
+echo -e $(~/.config/dwmstatus/graph_lib)"M "$MEM"% "$meter'   '^d^

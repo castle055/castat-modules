@@ -1,0 +1,29 @@
+#!/bin/sh
+
+[ "$graph_hist" == "" ] && { echo "Variable 'graph_hist' not set" ; exit 1; }
+[ "$new_percent" == "" ] && { echo "Variable 'new_percent' not set" ; exit 1; }
+[ "$hist_length" == "" ] && { echo "Variable 'hist_length' not set" ; exit 1; }
+[ "$graph_height" == "" ] && { echo "Variable 'graph_height' not set" ; exit 1; }
+
+[ -f $graph_hist ] || touch $graph_hist
+
+[ "$new_percent" == "" ] || echo $new_percent >> $graph_hist
+
+mv $graph_hist $graph_hist"_tmp"
+tail -n$hist_length $graph_hist"_tmp" > $graph_hist
+
+# GENERATE GRAPH
+mapfile -t hist < $graph_hist
+
+graph=''
+for i in $(seq 0 $(($hist_length-1)) ); do
+	h=$(echo "${hist[$i]}*0.01*$graph_height" | bc -l 2> /dev/null | cut -d. -f1)
+	[ "$h" == "" ] && h=0
+	graph=$graph"^r$i,$(($graph_height+$top+1-$h)),1,2^"
+done
+
+rect_border="^r0,$top,$(($hist_length + 2)),$(($graph_height + 2))^"
+rect_inside="^c$( xgetres dwm.normbgcolor )^^r1,$(($top+1)),$hist_length,$graph_height^^d^"
+graph=$rect_border$rect_inside"^f1^"$graph"^f$(($hist_length + 4))^"
+
+echo $graph

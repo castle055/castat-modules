@@ -1,0 +1,78 @@
+#!/bin/sh
+period=2
+
+hist_length=40
+graph_height=15
+
+# SET UP FILES
+tmpdir=/tmp/cpustat.dwmstatus
+[ -d $tmpdir ] || mkdir $tmpdir
+
+prev_total_file=$tmpdir/prev_total_file
+[ -f $prev_total_file ] || echo 0 > $prev_total_file
+prev_idle_file=$tmpdir/prev_idle_file
+[ -f $prev_idle_file ] || echo 0 > $prev_idle_file
+
+cpu_hist=$tmpdir/cpu_hist
+[ -f $cpu_hist ] || touch $cpu_hist
+
+# GET NEW PERCENTAGE
+prev_total=$(cat $prev_total_file)
+prev_idle=$(cat $prev_idle_file)
+
+new_data=$(cat /proc/stat | head -n1)
+new_idle=$(echo $new_data | cut -d ' ' -f5)
+
+total=0
+for i in $( seq 2 $(echo $new_data | wc -w)); do
+	total=$(( $total + $( echo $new_data | cut -d' ' -f$i ) ))
+done
+
+new_percent=$(echo "(1 - (($new_idle - $prev_idle)/($total - $prev_total)))*100" | bc -l | cut -d. -f1)
+
+# UPDATE FILES
+echo $new_idle > $prev_idle_file
+echo $total > $prev_total_file
+[ "$new_percent" == "" ] || echo $new_percent >> $cpu_hist
+
+mv $cpu_hist $cpu_hist"_tmp"
+tail -n$hist_length $cpu_hist"_tmp" > $cpu_hist
+
+# GENERATE GRAPH
+mapfile -t hist < $cpu_hist
+
+graph='' #^f5^'
+for i in $(seq 0 $(($hist_length-1)) ); do
+	h=$(echo "${hist[$i]}*0.01*$graph_height" | bc -l 2> /dev/null | cut -d. -f1)
+	[ "$h" == "" ] && h=0
+	[ "$h" == "-" ] && h=0
+	graph=$graph"^r$i,$((17-$h)),1,2^" #"^r$(( 17 - ($h / 2) + ( 24-$i ) / 4 )),$((24-$i)),$h,1^" #"^r$i,$((24-$h)),1,2^"
+done
+
+rect_border="^r0,2,$(($hist_length + 2)),$(($graph_height + 2))^"
+rect_inside="^c$( xgetres dwm.normbgcolor )^^r1,3,$hist_length,$graph_height^^d^"
+graph=$rect_border$rect_inside"^f1^"$graph"^f$(($hist_length + 4))^"
+
+# ENERGY PERFORMANCE AND SCALING PREFERENCES
+energ=$(cat /sys/devices/system/cpu/cpufreq/policy0/energy_performance_preference)
+scaling=$(cat /sys/devices/system/cpu/cpufreq/policy0/scaling_governor)
+
+case $energ in
+	"performance") ep=3;;
+	"balance_performance") ep=2;;
+	"balance_power") ep=1;;
+	"power") ep=0;;
+	"default") ep=-1;;
+esac
+case $scaling in
+	"performance") sp=1;;
+	"powersave") sp=0;;
+esac
+
+bar="^l0,2,0,$(($graph_height + 4))^^l3,2,3,$(($graph_height + 4))^"
+preferences="$bar^r-1,$((18-($sp*15))),6,2^^f9^$bar^r-1,$((18-($ep*5))),6,2^"
+
+[[ $new_percent -lt 10 ]] && new_percent=" $new_percent"
+
+# ECHO OUTPUT
+echo $preferences^f8^$graph"^f4^C^f4^"$new_percent%' '

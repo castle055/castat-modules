@@ -1,0 +1,4 @@
+#!/bin/dash
+
+echo " ^r0,4,38,16^^f4^^c"$( xgetres dwm.normbgcolor )"^"$( date +%H:%M )" ^d^"
+

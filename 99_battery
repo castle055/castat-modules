@@ -1,0 +1,23 @@
+#!/bin/sh
+period=1
+
+GLYPH='^f2^\uf1e6 '
+ONLINE=$( cat /sys/class/power_supply/ADP1/online )
+BAT=$( cat /sys/class/power_supply/BAT0/capacity )
+if [ $ONLINE -eq 0 ]; then
+	GLYPH='\uf241 '
+	[ $BAT -le 10 ] && FORMAT='^b#fcae1e^^c#06060a^'
+	[ $BAT -le 5 ] && { alarm "LOW BATTERY" & sleep 2 ; systemctl hibernate ;}
+	PWR="$(( $(cat /sys/class/power_supply/BAT0/power_now) / 10000 ))"
+	DETAILS=" - $(echo $PWR | cut -c -2)^r1,5,15,14^^f2^^c$(xgetres dwm.normbgcolor)^$(echo $PWR | cut -c 3-)^d^ W"
+
+	left=$(cat /sys/class/power_supply/BAT0/energy_now)
+	HRS=$(echo $(($left/$PWR/10000)))
+	MIN=$(echo $((60*$left/$PWR/10000 - 60*$HRS)))
+	[ $MIN -lt 10 ] && MIN="00$MIN" && MIN=$(echo $MIN | cut -c $((${#MIN} - 1))- )
+
+	DETAILS="$DETAILS^c#99ddff^^r12,6,28,12^^f15^^c$(xgetres dwm.normbgcolor)^$HRS:$MIN"
+fi
+
+
+echo -e $FORMAT' '$GLYPH $BAT'%'$DETAILS '^d^'
