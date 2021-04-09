@@ -2,7 +2,7 @@
 period=3
 
 export NO_ZSH_GREETING="true"
-source ~/.zshrc
+source ~/.zshrc 2> /dev/null
 
 BAT_PERCENT_SIZE=4
 
