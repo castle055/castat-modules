@@ -1,7 +1,7 @@
 #!/bin/sh
 period=3
 
-SEVSEG='/home/victor/.local/lib/dwmstatus/seven-seg'
+SEVSEG="$HOME/.local/bin/scripts/seven_seg"
 
 WIFI_GRAPH='^a0,2,16,16,50,80^^a2,5,12,12,55,70^^a7,8,2,2,0,360^'
 BLUE_GRAPH='^l8,13,8,22^^l9,13,12,16^^l11,15,9,17^^l9,17,12,20^^l11,19,9,21^^l8,17,5,20^^l8,17,5,15^'
@@ -15,7 +15,7 @@ else
 fi
 
 # UPDATES TRAFFIC THROUGHPUT
-netlog='/home/victor/.cache/netlog'
+netlog="$HOME/.cache/netlog"
 [ -f $netlog ] || touch $netlog
 
 prevdata=$( cat $netlog )
@@ -36,20 +36,23 @@ fi
 echo "$rxcur $txcur" > "$netlog"
 
 # 
-blue_data=$( timeout 0.1 bluetoothctl show )
-if [ $? -eq 124 ]; then
-	BLUE_STAT='^c#06060a^^r0,15,20,6^^d^'
-else
-	[ "$( echo $blue_data | cut -d ' ' -f 11 )" == "yes" ] && BLUE_STAT='^c#00bb00^' || BLUE_STAT='^c#aa0000^'
-	BLUE_STAT=$BLUE_STAT'^r0,15,29,4^^d^'
-	[ "$( echo $blue_data | cut -d ' ' -f 13 )" == "yes" ] && BLUE_STAT=$BLUE_STAT'^c#00bb00^' || BLUE_STAT=$BLUE_STAT'^c#aa0000^'
-	BLUE_STAT=$BLUE_STAT'^r32,15,29,4^^d^'
-	[ "$( echo $blue_data | cut -d ' ' -f 17 )" == "yes" ] && BLUE_STAT=$BLUE_STAT'^c#00bb00^' || BLUE_STAT=$BLUE_STAT'^c#aa0000^'
-	BLUE_STAT=$BLUE_STAT'^r64,15,29,4^^d^'
+which bluetoothctl 2> /dev/null
+if [ "$?" -eq "0" ]; then
+	blue_data=$( timeout 0.1 bluetoothctl show )
+	if [ $? -eq 124 ]; then
+		BLUE_STAT='^c#06060a^^r0,15,20,6^^d^'
+	else
+		[ "$( echo $blue_data | cut -d ' ' -f 11 )" == "yes" ] && BLUE_STAT='^c#00bb00^' || BLUE_STAT='^c#aa0000^'
+		BLUE_STAT=$BLUE_STAT'^r0,15,29,4^^d^'
+		[ "$( echo $blue_data | cut -d ' ' -f 13 )" == "yes" ] && BLUE_STAT=$BLUE_STAT'^c#00bb00^' || BLUE_STAT=$BLUE_STAT'^c#aa0000^'
+		BLUE_STAT=$BLUE_STAT'^r32,15,29,4^^d^'
+		[ "$( echo $blue_data | cut -d ' ' -f 17 )" == "yes" ] && BLUE_STAT=$BLUE_STAT'^c#00bb00^' || BLUE_STAT=$BLUE_STAT'^c#aa0000^'
+		BLUE_STAT=$BLUE_STAT'^r64,15,29,4^^d^'
 
-	bluetoothctl info > /dev/null
-	[ "$?" -eq "0" ] && BLUE_STAT=$BLUE_STAT'^c#00bb00^' || BLUE_STAT=$BLUE_STAT'^c#aa0000^'
-	BLUE_STAT=$BLUE_STAT'^r98,15,4,4^^d^'
+		bluetoothctl info > /dev/null
+		[ "$?" -eq "0" ] && BLUE_STAT=$BLUE_STAT'^c#00bb00^' || BLUE_STAT=$BLUE_STAT'^c#aa0000^'
+		BLUE_STAT=$BLUE_STAT'^r98,15,4,4^^d^'
+	fi
 fi
 
 echo '^f2^'$WIFI_GRAPH$BLUE_GRAPH'^f18^'$WIFI_STAT$BLUE_STAT'^f10^'$WIFI_RXTX'^f3^'
