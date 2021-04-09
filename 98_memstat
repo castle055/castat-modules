@@ -1,7 +1,7 @@
 #!/bin/sh
 period=1
 
-SVNSEG='/home/victor/.local/lib/dwmstatus/seven-seg'
+SVNSEG="$HOME/.local/bin/scripts/seven_seg"
 
 #==== MEM DISPLAY ====
 tmpdir="/tmp/memstat.dwmstatus"
