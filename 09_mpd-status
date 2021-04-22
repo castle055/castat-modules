@@ -7,14 +7,14 @@ WIDTH=35
 CARROUSEL_STATUS_FILE="/tmp/mpd-carrousel"
 carrousel_status=0
 #full_title=$( mpc -f %title% | head -n1 )
-full_title=$( timeout 0.3 mpc | head -n1 )
+full_title=$( timeout 0.3 mpc | head -n1 | tr -dc ' [:alnum:]\n\r' | tr '[:lower:]' '[:upper:]' | tr ' ' '-')
 [[ -f $CARROUSEL_STATUS_FILE ]] && carrousel_status=$(( $( cat $CARROUSEL_STATUS_FILE ) + 1 ))
 [[ $carrousel_status -gt $((${#full_title} - $WIDTH)) ]] && carrousel_status=1
 echo $carrousel_status > $CARROUSEL_STATUS_FILE
 
 mpcs=$( timeout 0.3 mpc )
 
-title=$( echo $full_title | tr ' ' '-' | tr [a-z] [A-Z] | cut -c $carrousel_status-$(( $carrousel_status + $WIDTH )) )
+title=$( echo $full_title | cut -c $carrousel_status-$(( $carrousel_status + $WIDTH )) )
 sttus=$( echo "$mpcs" | tail -n2 | head -n1 | cut -d '[' -f2 | cut -d ']' -f1 )
 flags=$( echo $mpcs | cut -d ':' -f5,6,7,8,9 | sed 's/[a-z]*://g' )
 # sttus -> [playing/paused/stopped]
