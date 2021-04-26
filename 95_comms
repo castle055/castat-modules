@@ -18,9 +18,12 @@ fi
 netlog="$HOME/.cache/netlog"
 [ -f $netlog ] || touch $netlog
 
+# Get net interface
+iface=$( cat /proc/net/wireless | tail -n1 | sed 's; ;;g' | cut -d ':' -f 1 )
+
 prevdata=$( cat $netlog )
-rxcur=$( cat /sys/class/net/wlp2s0/statistics/rx_bytes )
-txcur=$( cat /sys/class/net/wlp2s0/statistics/tx_bytes )
+rxcur=$( cat /sys/class/net/$iface/statistics/rx_bytes )
+txcur=$( cat /sys/class/net/$iface/statistics/tx_bytes )
 if [ "$prevdata" != "" ] && [ "$prevdata" != " " ]; then
 
 	delta_rx=$(( ($rxcur-${prevdata%% *}) / 1024))
