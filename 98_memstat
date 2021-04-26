@@ -31,4 +31,4 @@ deg=$(( $percent * 80 / 100 ))
 meter="^c#88ddff^$dispFORMAT$($SVNSEG $temp 4 22 10)^f-3^$meterFORMAT^a0,0,47,40,$((180 - $deg)),$deg^^a1,1,45,38,$((180 - $deg)),$deg^^a3,3,41,34,$((180 - $deg)),$deg^^d^"
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-echo -e $($SCRIPT_DIR/graph_lib)"M "$MEM"% "$meter'   '^d^
+echo -e $($SCRIPT_DIR/graph_lib)"M "$MEM"% "$meter^f35^^d^
