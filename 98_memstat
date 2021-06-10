@@ -15,6 +15,7 @@ export top=2
 MEM=$( free | grep Mem: | awk '{print int(100*($3+$5)/$2);}' )
 
 export new_percent=$MEM
+export graph_lib_set_type='change'
 
 [[ $MEM -lt 10 ]] && MEM=" $MEM"
 
