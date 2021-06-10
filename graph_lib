@@ -7,10 +7,13 @@
 
 [ -f $graph_hist ] || touch $graph_hist
 
-[ "$new_percent" == "" ] || echo $new_percent >> $graph_hist
+prev_val=$(tail -n 1 $graph_hist)
+if [ "$graph_lib_set_type" != "change" ] || [ "$new_percent" != "$prev_val" ]; then
+	[ "$new_percent" == "" ] || echo $new_percent >> $graph_hist
 
-mv $graph_hist $graph_hist"_tmp"
-tail -n$hist_length $graph_hist"_tmp" > $graph_hist
+	mv $graph_hist $graph_hist"_tmp"
+	tail -n$hist_length $graph_hist"_tmp" > $graph_hist
+fi
 
 # GENERATE GRAPH
 mapfile -t hist < $graph_hist
