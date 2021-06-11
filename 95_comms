@@ -39,7 +39,7 @@ fi
 echo "$rxcur $txcur" > "$netlog"
 
 # 
-which bluetoothctl 2>&1 > /dev/null
+(which bluetoothctl 2>&1) > /dev/null
 if [ "$?" -eq "0" ]; then
 	blue_data=$( timeout 0.1 bluetoothctl show )
 	if [ $? -eq 124 ]; then
