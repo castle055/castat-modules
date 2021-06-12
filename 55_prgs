@@ -1,5 +1,6 @@
 #!/bin/sh
 
+[ -f '/home/victor/repos/inhouse/cipcomms/cipcomms_do' ] || exit 1
 cipget='/home/victor/repos/inhouse/cipcomms/cipcomms_do prgs get'
 num="$($cipget percent)"
 #[ "$num" == "" ] && num=0
