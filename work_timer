@@ -1,0 +1,50 @@
+#!/bin/bash
+
+DAILY_HOURS=8
+
+TAG='work'
+
+export TIMEWARRIORDB=/home/castle/.config/timewarrior
+
+timew 2>&1 >/dev/null
+[ "$?" == "0" ] || exit
+
+TIME=$( timew summary $TAG | tail -n2 | head -n1 | sed 's/ //g' | cut -d ':' -f 1,2 | egrep "[0-9]:[0-9][0-9]")
+
+HOURS=${TIME%:*}
+MINS=${TIME#*:}
+
+HB_W=3
+HB_H=5
+HB_X=0
+HB_Y=6
+HB_GAP=1
+OFFSET=0
+COMPLETED_CLR="^c#00ff00^"
+PENDING_CLR="^c#9f3b09^"
+HOUR_BLOCKS=""
+for ((i=1; i<=$DAILY_HOURS; i++))
+do
+	if [ $i -le $HOURS ]
+	then
+		HOUR_BLOCKS+=$COMPLETED_CLR
+	else
+		HOUR_BLOCKS+=$PENDING_CLR
+	fi
+
+	HOUR_BLOCKS+="^r$(($HB_X + $OFFSET)),$HB_Y,$HB_W,$HB_H^^d^"
+	OFFSET=$(( $OFFSET + $HB_W + $HB_GAP ))
+done
+HOUR_BLOCKS+=
+
+MB_X=0
+MB_Y=12
+MB_H=3
+MB_W=$(( $OFFSET - $HB_GAP))
+
+MB_COMPLETED_W=$(( $MINS * $MB_W / 60 ))
+
+MIN_BLOCKS="^r$MB_X,$MB_Y,$MB_COMPLETED_W,$MB_H^"
+
+echo "<[$HOUR_BLOCKS$MIN_BLOCKS^f$OFFSET^]"
+
