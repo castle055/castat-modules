@@ -1,0 +1,623 @@
+#!/bin/bash
+
+source .include/primitives
+
+b_pt_rel() {
+  rectangle $(( $1 + ( $3 * 2 ) )) $(( $2 + ( $4 * 2 ) )) 2 2
+}
+
+pt_rel() {
+  rectangle $(( $1 + $3 )) $(( $2 + $4 )) 1 1
+}
+
+width=0
+draw_letter() {
+  x=$1
+  y=$2
+
+  case "$3" in
+    "a")
+      pt_rel x y 0 0
+      pt_rel x y 1 0
+      pt_rel x y 2 0
+
+      pt_rel x y 0 1
+      #pt_rel x y 1 1
+      pt_rel x y 2 1
+
+      pt_rel x y 0 2
+      pt_rel x y 1 2
+      pt_rel x y 2 2
+
+      pt_rel x y 0 3
+      #pt_rel x y 1 3
+      pt_rel x y 2 3
+
+      pt_rel x y 0 4
+      #pt_rel x y 1 4
+      pt_rel x y 2 4
+      ;;
+    "b")
+      pt_rel x y 0 0
+      pt_rel x y 1 0
+      pt_rel x y 2 0
+
+      pt_rel x y 0 1
+      #pt_rel x y 1 1
+      pt_rel x y 2 1
+
+      pt_rel x y 0 2
+      pt_rel x y 1 2
+      #pt_rel x y 2 2
+
+      pt_rel x y 0 3
+      #pt_rel x y 1 3
+      pt_rel x y 2 3
+
+      pt_rel x y 0 4
+      pt_rel x y 1 4
+      pt_rel x y 2 4
+      ;;
+    "c")
+      pt_rel x y 0 0
+      pt_rel x y 1 0
+      pt_rel x y 2 0
+
+      pt_rel x y 0 1
+      #pt_rel x y 1 1
+      #pt_rel x y 2 1
+
+      pt_rel x y 0 2
+      #pt_rel x y 1 2
+      #pt_rel x y 2 2
+
+      pt_rel x y 0 3
+      #pt_rel x y 1 3
+      #pt_rel x y 2 3
+
+      pt_rel x y 0 4
+      pt_rel x y 1 4
+      pt_rel x y 2 4
+      ;;
+    "d")
+      pt_rel x y 0 0
+      pt_rel x y 1 0
+      #pt_rel x y 2 0
+
+      pt_rel x y 0 1
+      #pt_rel x y 1 1
+      pt_rel x y 2 1
+
+      pt_rel x y 0 2
+      #pt_rel x y 1 2
+      pt_rel x y 2 2
+
+      pt_rel x y 0 3
+      #pt_rel x y 1 3
+      pt_rel x y 2 3
+
+      pt_rel x y 0 4
+      pt_rel x y 1 4
+      #pt_rel x y 2 4
+      ;;
+    "e")
+      pt_rel x y 0 0
+      pt_rel x y 1 0
+      pt_rel x y 2 0
+
+      pt_rel x y 0 1
+      #pt_rel x y 1 1
+      #pt_rel x y 2 1
+
+      pt_rel x y 0 2
+      pt_rel x y 1 2
+      #pt_rel x y 2 2
+
+      pt_rel x y 0 3
+      #pt_rel x y 1 3
+      #pt_rel x y 2 3
+
+      pt_rel x y 0 4
+      pt_rel x y 1 4
+      pt_rel x y 2 4
+      ;;
+    "f")
+      pt_rel x y 0 0
+      pt_rel x y 1 0
+      pt_rel x y 2 0
+
+      pt_rel x y 0 1
+      #pt_rel x y 1 1
+      #pt_rel x y 2 1
+
+      pt_rel x y 0 2
+      pt_rel x y 1 2
+      #pt_rel x y 2 2
+
+      pt_rel x y 0 3
+      #pt_rel x y 1 3
+      #pt_rel x y 2 3
+
+      pt_rel x y 0 4
+      #pt_rel x y 1 4
+      #pt_rel x y 2 4
+      ;;
+    "g")
+      pt_rel x y 0 0
+      pt_rel x y 1 0
+      pt_rel x y 2 0
+
+      pt_rel x y 0 1
+      #pt_rel x y 1 1
+      #pt_rel x y 2 1
+
+      pt_rel x y 0 2
+      #pt_rel x y 1 2
+      pt_rel x y 2 2
+
+      pt_rel x y 0 3
+      #pt_rel x y 1 3
+      pt_rel x y 2 3
+
+      pt_rel x y 0 4
+      pt_rel x y 1 4
+      pt_rel x y 2 4
+      ;;
+    "h")
+      pt_rel x y 0 0
+      #pt_rel x y 1 0
+      pt_rel x y 2 0
+
+      pt_rel x y 0 1
+      #pt_rel x y 1 1
+      pt_rel x y 2 1
+
+      pt_rel x y 0 2
+      pt_rel x y 1 2
+      pt_rel x y 2 2
+
+      pt_rel x y 0 3
+      #pt_rel x y 1 3
+      pt_rel x y 2 3
+
+      pt_rel x y 0 4
+      #pt_rel x y 1 4
+      pt_rel x y 2 4
+      ;;
+    "i")
+      #pt_rel x y 0 0
+      pt_rel x y 1 0
+      #pt_rel x y 2 0
+
+      #pt_rel x y 0 1
+      pt_rel x y 1 1
+      #pt_rel x y 2 1
+
+      #pt_rel x y 0 2
+      pt_rel x y 1 2
+      #pt_rel x y 2 2
+
+      #pt_rel x y 0 3
+      pt_rel x y 1 3
+      #pt_rel x y 2 3
+
+      #pt_rel x y 0 4
+      pt_rel x y 1 4
+      #pt_rel x y 2 4
+      ;;
+    "j")
+      #pt_rel x y 0 0
+      #pt_rel x y 1 0
+      pt_rel x y 2 0
+
+      #pt_rel x y 0 1
+      #pt_rel x y 1 1
+      pt_rel x y 2 1
+
+      #pt_rel x y 0 2
+      #pt_rel x y 1 2
+      pt_rel x y 2 2
+
+      pt_rel x y 0 3
+      #pt_rel x y 1 3
+      pt_rel x y 2 3
+
+      pt_rel x y 0 4
+      pt_rel x y 1 4
+      pt_rel x y 2 4
+      ;;
+    "k")
+      pt_rel x y 0 0
+      #pt_rel x y 1 0
+      pt_rel x y 2 0
+
+      pt_rel x y 0 1
+      #pt_rel x y 1 1
+      pt_rel x y 2 1
+
+      pt_rel x y 0 2
+      pt_rel x y 1 2
+      #pt_rel x y 2 2
+
+      pt_rel x y 0 3
+      #pt_rel x y 1 3
+      pt_rel x y 2 3
+
+      pt_rel x y 0 4
+      #pt_rel x y 1 4
+      pt_rel x y 2 4
+      ;;
+    "l")
+      pt_rel x y 0 0
+      #pt_rel x y 1 0
+      #pt_rel x y 2 0
+
+      pt_rel x y 0 1
+      #pt_rel x y 1 1
+      #pt_rel x y 2 1
+
+      pt_rel x y 0 2
+      #pt_rel x y 1 2
+      #pt_rel x y 2 2
+
+      pt_rel x y 0 3
+      #pt_rel x y 1 3
+      #pt_rel x y 2 3
+
+      pt_rel x y 0 4
+      pt_rel x y 1 4
+      pt_rel x y 2 4
+      ;;
+    "m")
+      pt_rel x y 0 0
+      #pt_rel x y 1 0
+      #pt_rel x y 2 0
+      #pt_rel x y 3 0
+      pt_rel x y 4 0
+
+      pt_rel x y 0 1
+      pt_rel x y 1 1
+      #pt_rel x y 2 1
+      pt_rel x y 3 1
+      pt_rel x y 4 1
+
+      pt_rel x y 0 2
+      #pt_rel x y 1 2
+      pt_rel x y 2 2
+      #pt_rel x y 3 2
+      pt_rel x y 4 2
+
+      pt_rel x y 0 3
+      #pt_rel x y 1 3
+      #pt_rel x y 2 3
+      #pt_rel x y 3 3
+      pt_rel x y 4 3
+
+      pt_rel x y 0 4
+      #pt_rel x y 1 4
+      #pt_rel x y 2 4
+      #pt_rel x y 3 4
+      pt_rel x y 4 4
+
+      spacer 2
+      width=$((width+2))
+      ;;
+    "n")
+      pt_rel x y 0 0
+      #pt_rel x y 1 0
+      #pt_rel x y 2 0
+      pt_rel x y 3 0
+
+      pt_rel x y 0 1
+      pt_rel x y 1 1
+      #pt_rel x y 2 1
+      pt_rel x y 3 1
+
+      pt_rel x y 0 2
+      #pt_rel x y 1 2
+      pt_rel x y 2 2
+      pt_rel x y 3 2
+
+      pt_rel x y 0 3
+      #pt_rel x y 1 3
+      #pt_rel x y 2 3
+      pt_rel x y 3 3
+
+      pt_rel x y 0 4
+      #pt_rel x y 1 4
+      #pt_rel x y 2 4
+      pt_rel x y 3 4
+
+      spacer 1
+      width=$((width+1))
+      ;;
+    "o")
+      pt_rel x y 0 0
+      pt_rel x y 1 0
+      pt_rel x y 2 0
+
+      pt_rel x y 0 1
+      #pt_rel x y 1 1
+      pt_rel x y 2 1
+
+      pt_rel x y 0 2
+      #pt_rel x y 1 2
+      pt_rel x y 2 2
+
+      pt_rel x y 0 3
+      #pt_rel x y 1 3
+      pt_rel x y 2 3
+
+      pt_rel x y 0 4
+      pt_rel x y 1 4
+      pt_rel x y 2 4
+      ;;
+    "p")
+      pt_rel x y 0 0
+      pt_rel x y 1 0
+      pt_rel x y 2 0
+
+      pt_rel x y 0 1
+      #pt_rel x y 1 1
+      pt_rel x y 2 1
+
+      pt_rel x y 0 2
+      pt_rel x y 1 2
+      pt_rel x y 2 2
+
+      pt_rel x y 0 3
+      #pt_rel x y 1 3
+      #pt_rel x y 2 3
+
+      pt_rel x y 0 4
+      #pt_rel x y 1 4
+      #pt_rel x y 2 4
+      ;;
+    "q")
+      pt_rel x y 0 0
+      pt_rel x y 1 0
+      pt_rel x y 2 0
+      pt_rel x y 3 0
+
+      pt_rel x y 0 1
+      #pt_rel x y 1 1
+      #pt_rel x y 2 1
+      pt_rel x y 3 1
+
+      pt_rel x y 0 2
+      #pt_rel x y 1 2
+      #pt_rel x y 2 2
+      pt_rel x y 3 2
+
+      pt_rel x y 0 3
+      #pt_rel x y 1 3
+      pt_rel x y 2 3
+      pt_rel x y 3 3
+
+      pt_rel x y 0 4
+      pt_rel x y 1 4
+      pt_rel x y 2 4
+      pt_rel x y 3 4
+
+      spacer 1
+      width=$((width+1))
+      ;;
+    "r")
+      pt_rel x y 0 0
+      pt_rel x y 1 0
+      pt_rel x y 2 0
+
+      pt_rel x y 0 1
+      #pt_rel x y 1 1
+      pt_rel x y 2 1
+
+      pt_rel x y 0 2
+      pt_rel x y 1 2
+      #pt_rel x y 2 2
+
+      pt_rel x y 0 3
+      #pt_rel x y 1 3
+      pt_rel x y 2 3
+
+      pt_rel x y 0 4
+      #pt_rel x y 1 4
+      pt_rel x y 2 4
+      ;;
+    "s")
+      pt_rel x y 0 0
+      pt_rel x y 1 0
+      pt_rel x y 2 0
+
+      pt_rel x y 0 1
+      #pt_rel x y 1 1
+      #pt_rel x y 2 1
+
+      pt_rel x y 0 2
+      pt_rel x y 1 2
+      pt_rel x y 2 2
+
+      #pt_rel x y 0 3
+      #pt_rel x y 1 3
+      pt_rel x y 2 3
+
+      pt_rel x y 0 4
+      pt_rel x y 1 4
+      pt_rel x y 2 4
+      ;;
+    "t")
+      pt_rel x y 0 0
+      pt_rel x y 1 0
+      pt_rel x y 2 0
+
+      #pt_rel x y 0 1
+      pt_rel x y 1 1
+      #pt_rel x y 2 1
+
+      #pt_rel x y 0 2
+      pt_rel x y 1 2
+      #pt_rel x y 2 2
+
+      #pt_rel x y 0 3
+      pt_rel x y 1 3
+      #pt_rel x y 2 3
+
+      #pt_rel x y 0 4
+      pt_rel x y 1 4
+      #pt_rel x y 2 4
+      ;;
+    "u")
+      pt_rel x y 0 0
+      #pt_rel x y 1 0
+      pt_rel x y 2 0
+
+      pt_rel x y 0 1
+      #pt_rel x y 1 1
+      pt_rel x y 2 1
+
+      pt_rel x y 0 2
+      #pt_rel x y 1 2
+      pt_rel x y 2 2
+
+      pt_rel x y 0 3
+      #pt_rel x y 1 3
+      pt_rel x y 2 3
+
+      pt_rel x y 0 4
+      pt_rel x y 1 4
+      pt_rel x y 2 4
+      ;;
+    "v")
+      pt_rel x y 0 0
+      #pt_rel x y 1 0
+      pt_rel x y 2 0
+
+      pt_rel x y 0 1
+      #pt_rel x y 1 1
+      pt_rel x y 2 1
+
+      pt_rel x y 0 2
+      #pt_rel x y 1 2
+      pt_rel x y 2 2
+
+      pt_rel x y 0 3
+      #pt_rel x y 1 3
+      pt_rel x y 2 3
+
+      #pt_rel x y 0 4
+      pt_rel x y 1 4
+      #pt_rel x y 2 4
+      ;;
+    "w")
+      pt_rel x y 0 0
+      #pt_rel x y 1 0
+      #pt_rel x y 2 0
+      #pt_rel x y 3 0
+      pt_rel x y 4 0
+
+      pt_rel x y 0 1
+      #pt_rel x y 1 1
+      #pt_rel x y 2 1
+      #pt_rel x y 3 1
+      pt_rel x y 4 1
+
+      pt_rel x y 0 2
+      #pt_rel x y 1 2
+      #pt_rel x y 2 2
+      #pt_rel x y 3 2
+      pt_rel x y 4 2
+
+      pt_rel x y 0 3
+      #pt_rel x y 1 3
+      pt_rel x y 2 3
+      #pt_rel x y 3 3
+      pt_rel x y 4 3
+
+      #pt_rel x y 0 4
+      pt_rel x y 1 4
+      #pt_rel x y 2 4
+      pt_rel x y 3 4
+      #pt_rel x y 4 4
+
+      spacer 2
+      width=$((width+2))
+      ;;
+    "x")
+      pt_rel x y 0 0
+      #pt_rel x y 1 0
+      pt_rel x y 2 0
+
+      pt_rel x y 0 1
+      #pt_rel x y 1 1
+      pt_rel x y 2 1
+
+      #pt_rel x y 0 2
+      pt_rel x y 1 2
+      #pt_rel x y 2 2
+
+      pt_rel x y 0 3
+      #pt_rel x y 1 3
+      pt_rel x y 2 3
+
+      pt_rel x y 0 4
+      #pt_rel x y 1 4
+      pt_rel x y 2 4
+      ;;
+    "y")
+      pt_rel x y 0 0
+      #pt_rel x y 1 0
+      pt_rel x y 2 0
+
+      pt_rel x y 0 1
+      #pt_rel x y 1 1
+      pt_rel x y 2 1
+
+      #pt_rel x y 0 2
+      pt_rel x y 1 2
+      #pt_rel x y 2 2
+
+      #pt_rel x y 0 3
+      pt_rel x y 1 3
+      #pt_rel x y 2 3
+
+      #pt_rel x y 0 4
+      pt_rel x y 1 4
+      #pt_rel x y 2 4
+      ;;
+    "z")
+      pt_rel x y 0 0
+      pt_rel x y 1 0
+      pt_rel x y 2 0
+
+      #pt_rel x y 0 1
+      #pt_rel x y 1 1
+      pt_rel x y 2 1
+
+      #pt_rel x y 0 2
+      pt_rel x y 1 2
+      #pt_rel x y 2 2
+
+      pt_rel x y 0 3
+      #pt_rel x y 1 3
+      #pt_rel x y 2 3
+
+      pt_rel x y 0 4
+      pt_rel x y 1 4
+      pt_rel x y 2 4
+      ;;
+    " ")
+      spacer 3
+      width=$((width+3))
+      ;;
+  esac
+  spacer 4
+  width=$((width+4))
+}
+
+draw_str() {
+  width=0
+  while read -n 1 char ; do
+    draw_letter "$1" "$2" "$char"
+  done <<< "$3"
+  spacer "-$width"
+  width=0
+}

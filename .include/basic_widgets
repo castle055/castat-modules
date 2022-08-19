@@ -1,0 +1,18 @@
+#!/bin/bash
+
+source .include/primitives
+
+char_alert() {
+    case $1 in
+        "info") color "#88ddff" ;;
+        "warn") color "#fcae1e" ;;
+        "error") color "#ff0000" ;;
+    esac
+    rectangle 0 4 16 16
+    spacer 4
+    color "$( xgetres dwm.normbgcolor )"
+    echo "$2"
+    spacer 4
+    rst_color
+}
+

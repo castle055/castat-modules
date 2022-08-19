@@ -1,0 +1,21 @@
+#!/bin/bash
+
+color() {
+  echo "^c$1^"
+}
+color_b() {
+  echo "^b$1^"
+}
+rst_color() {
+  echo "^d^"
+}
+spacer() {
+  echo "^f$1^"
+}
+rectangle() {
+  echo "^r$1,$2,$3,$4^"
+}
+point () {
+  echo "^p$1,$2^"
+}
+
